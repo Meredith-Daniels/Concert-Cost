@@ -1,8 +1,21 @@
+import { redirect } from "next/navigation";
 import { Music } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
 import { ThemeSelector } from "@/components/ThemeSelector";
+import { createClient } from "@/lib/supabase/server";
 
-export default function LoginPage() {
+export const dynamic = "force-dynamic";
+
+export default async function LoginPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return (
     <section className="hero-gradient relative flex min-h-screen flex-col">
       <section className="pointer-events-auto absolute right-4 top-4 z-50 sm:right-8 sm:top-8">
